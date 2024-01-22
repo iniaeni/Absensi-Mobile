@@ -1,81 +1,100 @@
 import 'dart:io';
 
+import 'package:absensi_project/controller/form_absensi_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'Button.dart';
 import 'InputField.dart';
 
 class InputAbsensi extends StatefulWidget {
+  const InputAbsensi({super.key});
+
   @override
   _InputAbsensiState createState() => _InputAbsensiState();
 }
 
 class _InputAbsensiState extends State<InputAbsensi> {
   File? image;
+  final inputForm = Get.put(GetFormAbsensiController());
 
   Future getImage() async {
     final ImagePicker picker = ImagePicker();
     // Capture a photo.
     final XFile? imagePicked =
-    await picker.pickImage(source: ImageSource.camera);
+        await picker.pickImage(source: ImageSource.camera);
     setState(() {
       image = File(imagePicked!.path);
+      inputForm.inputImage = image!.path;
     });
   }
 
-    @override
-   
+  @override
   Widget build(BuildContext context) {
+    print('inputForm.inputImage: ${inputForm.inputImage}');
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            SizedBox(height: 10,),
+            const SizedBox(
+              height: 10,
+            ),
             Card(
               color: Colors.orange[50],
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
-                side: BorderSide(color: Colors.orange, width: 2),
+                side: const BorderSide(color: Colors.orange, width: 2),
               ),
-              child: Container(
+              child: SizedBox(
                 width: 400,
-                height: 150,
                 child: Padding(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start, // Agar teks berada di sebelah kiri
+                    crossAxisAlignment: CrossAxisAlignment
+                        .start, // Agar teks berada di sebelah kiri
                     children: [
-                      Text(
+                      const Text(
                         "SENIN",
-                        style: TextStyle(fontSize: 18, color: Colors.orange, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.orange,
+                            fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 2),
-                      Text(
+                      const SizedBox(height: 2),
+                      const Text(
                         "23 Oktober 2023",
-                        style: TextStyle(fontSize: 14, color: Colors.orange, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.orange,
+                            fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                         children: [
-
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                padding: EdgeInsets.all(5),
-
+                                padding: const EdgeInsets.all(5),
                               ),
-                              Text(
+                              const Text(
                                 "Saat Ini",
-                                style: TextStyle(fontSize: 14, color: Colors.orange, fontWeight: FontWeight.bold,),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.orange,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              SizedBox(height: 2),
-                              Text(
+                              const SizedBox(height: 2),
+                              const Text(
                                 "06:20",
-                                style: TextStyle(fontSize: 25, color: Colors.orange, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.orange,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
@@ -83,17 +102,22 @@ class _InputAbsensiState extends State<InputAbsensi> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Container(
-                                padding: EdgeInsets.all(5),
-
+                                padding: const EdgeInsets.all(5),
                               ),
-                              Text(
+                              const Text(
                                 "Keterlambatan",
-                                style: TextStyle(fontSize: 14, color: Colors.orange, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.orange,
+                                    fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 2),
-                              Text(
+                              const SizedBox(height: 2),
+                              const Text(
                                 "07:30",
-                                style: TextStyle(fontSize: 25, color: Colors.orange, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.orange,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
@@ -104,14 +128,15 @@ class _InputAbsensiState extends State<InputAbsensi> {
                 ),
               ),
             ),
-
-
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               "FORM SISWA HADIR",
-              style: TextStyle(color: Colors.black, fontSize: 20,),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+              ),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -119,16 +144,26 @@ class _InputAbsensiState extends State<InputAbsensi> {
               ),
               child: InputField(),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             image != null
-                ? Container(
-                height: 100,
-                width:MediaQuery.of(context).size.width,
-                child: Image.file(
-                  image!,
-                  fit: BoxFit.cover,))
+                ? SizedBox(
+                    width: 250,
+                    height: 250,
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: kIsWeb
+                          ? Image.network(
+                              Uri.parse(image!.path).toString(),
+                              fit: BoxFit.cover,
+                            )
+                          : Image.file(
+                              image!,
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                  )
                 : Container(),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             TextButton(
               style: TextButton.styleFrom(backgroundColor: Colors.white),
               onPressed: () async {
@@ -142,23 +177,23 @@ class _InputAbsensiState extends State<InputAbsensi> {
                     width: 30,
                     height: 30,
                   ),
-                  SizedBox(height: 5),
-                  Text(
+                  const SizedBox(height: 5),
+                  const Text(
                     'Bukti Hadir',
                     style: TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
             ),
-
-
-            SizedBox(height: 40),
-            Button()
+            const SizedBox(height: 40),
+            Button(
+                onPressed: () {
+                  inputForm.doAbsen();
+                },
+                title: "Hadir"),
           ],
         ),
       ),
     );
   }
 }
-
-
